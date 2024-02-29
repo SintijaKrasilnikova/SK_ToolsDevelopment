@@ -18,6 +18,13 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
+
+	m_toolInputCommands.mouseLeftPressed = false;
+	m_toolInputCommands.mouseLeftReleased = true;
+	m_toolInputCommands.mouseRightPressed = false;
+	m_toolInputCommands.mouseRightReleased = true;
+	m_toolInputCommands.mouse_X = 0;
+	m_toolInputCommands.mouse_Y = 0;
 	
 }
 
@@ -289,6 +296,13 @@ void ToolMain::Tick(MSG *msg)
 
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
+
+	if (m_toolInputCommands.mouseLeftPressed)
+	{
+		m_selectedObject = m_d3dRenderer.MousePicking();
+		m_toolInputCommands.mouseLeftPressed = false;
+	}
+
 }
 
 void ToolMain::UpdateInput(MSG * msg)
@@ -306,9 +320,17 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
+		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
+		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
 		break;
 
-	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
+	case WM_LBUTTONDOWN:
+		//mouse left pressed.	
+		m_toolInputCommands.mouseLeftPressed = true;
+		break;
+
+
+	case WM_RBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
 	/*	LPPOINT p;
 		GetCursorPos(p);
@@ -322,8 +344,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		//}
 		ShowCursor(false);
 		SetCursorPos(m_width / 2, m_height / 2);
-		m_toolInputCommands.mouseLeftReleased = false;
-		m_toolInputCommands.mouseLeftPressed = true;
+		//m_toolInputCommands.mouseLeftReleased = false;
+		//m_toolInputCommands.mouseLeftPressed = true;
+
+		m_toolInputCommands.mouseRightReleased = false;
+		m_toolInputCommands.mouseRightPressed = true;
 		
 
 		
@@ -332,21 +357,23 @@ void ToolMain::UpdateInput(MSG * msg)
 
 		break;
 
-	case WM_LBUTTONUP:	//mouse button down,  you will probably need to check when its up too
+	case WM_RBUTTONUP:	//mouse button down,  you will probably need to check when its up too
 		//set some flag for the mouse button in inputcommands
 		/*LPPOINT p;
 		GetCursorPos(p);
 		m_mousePosX = p->x;
 		m_mousePosY = p->y;*/
 		ShowCursor(true);
-		m_toolInputCommands.mouseLeftReleased = true;
-		m_toolInputCommands.mouseLeftPressed = false;
+		m_toolInputCommands.mouseRightReleased = true;
+		m_toolInputCommands.mouseRightPressed = false;
 		//m_mouseReleased = true;
 		//m_mousePressed = false;
 
 		break;
-		
+
 	}
+	 
+
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement
 	if (m_keyArray['W'])

@@ -75,7 +75,7 @@ void Camera::Update(InputCommands* Input)
 	////create right vector from look Direction
 	//m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 
-	if (Input->mouseLeftPressed)
+	if (Input->mouseRightPressed)
 	{
 		POINT p;
 		if (GetCursorPos(&p))
@@ -98,7 +98,7 @@ void Camera::Update(InputCommands* Input)
 		}
 	}
 
-	if (Input->mouseLeftReleased)
+	if (Input->mouseRightReleased)
 	{
 		/*POINT p2;
 		if (GetCursorPos(&p2))

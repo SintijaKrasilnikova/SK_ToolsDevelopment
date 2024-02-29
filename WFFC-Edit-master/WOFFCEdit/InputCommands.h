@@ -10,6 +10,8 @@ struct InputCommands
 	bool rotLeft;
 	bool mouseLeftPressed;
 	bool mouseLeftReleased;
-	float mouseLeftXpos;
-	float mouseLeftYpos;
+	bool mouseRightPressed;
+	bool mouseRightReleased;
+	int mouse_X;
+	int mouse_Y;
 };
