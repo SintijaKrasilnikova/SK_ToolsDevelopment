@@ -18,10 +18,23 @@ public:
     DirectX::SimpleMath::Vector3 GetCameraLookAt();
     void Update(InputCommands* Input);
     void SetWindowSize(float width, float height);
+
+    void setFocusObjectsPos(DirectX::SimpleMath::Vector3 position) { selectedObjectPosition = position; }
+    void setCanFocus(bool canCameraFocus) { canFocus = canCameraFocus; }
   
 
 private:
     DirectX::SimpleMath::Vector2 MouseRotate(float m_x, float m_y);
+    void FocusOnObject();
+    
+
+    //int m_selectedObjectID = -1;
+    DirectX::SimpleMath::Vector3 selectedObjectPosition;
+    bool canFocus;
+    float focusDistance;
+
+    bool inFocusTransition;
+
     //DirectX::SimpleMath::Vector2 Turn(float d_x, float d_y);
 
     //void Update(DX::StepTimer const& timer);

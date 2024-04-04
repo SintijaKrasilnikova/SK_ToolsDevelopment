@@ -25,6 +25,8 @@ ToolMain::ToolMain()
 	m_toolInputCommands.mouseRightReleased = true;
 	m_toolInputCommands.mouse_X = 0;
 	m_toolInputCommands.mouse_Y = 0;
+
+	m_toolInputCommands.camFocusCalled = false;
 	
 }
 
@@ -398,6 +400,7 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.right = true;
 	}
 	else m_toolInputCommands.right = false;
+
 	//rotation
 	if (m_keyArray['E'])
 	{
@@ -410,5 +413,11 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.rotLeft = false;
 
-	//WASD
+	//focus on object
+	if (m_keyArray['F'])
+	{
+		m_toolInputCommands.camFocusCalled = true;
+	}
+	else m_toolInputCommands.camFocusCalled = false;
+	
 }

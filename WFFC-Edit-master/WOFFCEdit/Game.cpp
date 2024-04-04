@@ -30,31 +30,6 @@ Game::Game()
 	m_movespeed = 0.30;
 	//m_camRotRate = 3.0;
 
-	////camera
-	//m_camPosition.x = 0.0f;
-	//m_camPosition.y = 3.7f;
-	//m_camPosition.z = -3.5f;
-
-	//m_camOrientation.x = 0;
-	//m_camOrientation.y = 0;
-	//m_camOrientation.z = 0;
-
-	//m_camLookAt.x = 0.0f;
-	//m_camLookAt.y = 0.0f;
-	//m_camLookAt.z = 0.0f;
-
-	//m_camLookDirection.x = 0.0f;
-	//m_camLookDirection.y = 0.0f;
-	//m_camLookDirection.z = 0.0f;
-
-	//m_camRight.x = 0.0f;
-	//m_camRight.y = 0.0f;
-	//m_camRight.z = 0.0f;
-
-	//m_camOrientation.x = 0.0f;
-	//m_camOrientation.y = 0.0f;
-	//m_camOrientation.z = 0.0f;
-
 }
 
 Game::~Game()
@@ -159,6 +134,7 @@ int Game::MousePicking()
 	//Loop through entire display list of objects and pick with each in turn. 
 	for (int i = 0; i < m_displayList.size(); i++)
 	{
+		// m_displayList[i].m_position
 		//Get the scale factor and translation of the object
 		const XMVECTORF32 scale = { m_displayList[i].m_scale.x,		m_displayList[i].m_scale.y,		m_displayList[i].m_scale.z };
 		const XMVECTORF32 translate = { m_displayList[i].m_position.x,	m_displayList[i].m_position.y,	m_displayList[i].m_position.z };
@@ -189,6 +165,19 @@ int Game::MousePicking()
 			}
 		}
 	}
+    //if the object is valid
+    if (selectedID != -1)
+    {
+        //an object is selected so the camera has something to focus on
+        thisCamera->setCanFocus(true);
+        //send to camera the selected objects location
+        thisCamera->setFocusObjectsPos(m_displayList[selectedID].m_position);
+    }
+    if(selectedID == -1)
+    {
+        //camera has nothing to focus on
+        thisCamera->setCanFocus(false);
+    }
 
 	//if we got a hit.  return it.  
 	return selectedID;
@@ -199,51 +188,6 @@ int Game::MousePicking()
 void Game::Update(DX::StepTimer const& timer)
 {
 	thisCamera->Update(&m_InputCommands);
-	////TODO  any more complex than this, and the camera should be abstracted out to somewhere else
-	////camera motion is on a plane, so kill the 7 component of the look direction
-	//Vector3 planarMotionVector = m_camLookDirection;
-	//planarMotionVector.y = 0.0;
-
-	//if (m_InputCommands.rotRight)
-	//{
-	//	m_camOrientation.y -= m_camRotRate;
-	//}
-	//if (m_InputCommands.rotLeft)
-	//{
-	//	m_camOrientation.y += m_camRotRate;
-	//}
-
-	////create look direction from Euler angles in m_camOrientation
-	//m_camLookDirection.x = sin((m_camOrientation.y)*3.1415 / 180);
-	//m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
-	//m_camLookDirection.Normalize();
-
-	////create right vector from look Direction
-	//m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
-
-	////process input and update stuff
-	//if (m_InputCommands.forward)
-	//{	
-	//	m_camPosition += m_camLookDirection*m_movespeed;
-	//}
-	//if (m_InputCommands.back)
-	//{
-	//	m_camPosition -= m_camLookDirection*m_movespeed;
-	//}
-	//if (m_InputCommands.right)
-	//{
-	//	m_camPosition += m_camRight*m_movespeed;
-	//}
-	//if (m_InputCommands.left)
-	//{
-	//	m_camPosition -= m_camRight*m_movespeed;
-	//}
-
-	////update lookat point
-	//m_camLookAt = m_camPosition + m_camLookDirection;
-
-	////apply camera vectors
- //   m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
 
     m_batchEffect->SetView(thisCamera->GetCameraView());
     m_batchEffect->SetWorld(Matrix::Identity);
