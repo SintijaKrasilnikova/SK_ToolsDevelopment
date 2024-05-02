@@ -419,12 +419,13 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.camFocusCalled = true;
 	}
-	else m_toolInputCommands.camFocusCalled = false;
+	//else m_toolInputCommands.camFocusCalled = false;
 
 	//arcball camera mode
 	if (m_keyArray['G'])
 	{
-		m_toolInputCommands.arcballMode = true;
+		//m_toolInputCommands.arcballMode = true;
+		m_toolInputCommands.camFocusCalled = false;
 	}
 	
 }

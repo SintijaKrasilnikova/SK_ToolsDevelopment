@@ -48,6 +48,7 @@ Camera::Camera()
 	canFocus = false;
 	focusDistance = 5.f;
 	inFocusTransition = false;
+	
 }
 
 Camera::~Camera()
@@ -64,21 +65,25 @@ void Camera::Update(InputCommands* Input)
 
 	if (Input->rotRight)
 	{
-		m_camOrientation.y += m_camRotRate;
+		m_camPosition.y += m_movespeed;
 	}
 	if (Input->rotLeft)
 	{
-		m_camOrientation.y -= m_camRotRate;
-		//m_camOrientation.z += m_camRotRate;
+		m_camPosition.y -= m_movespeed;
 	}
 
-	////create look direction from Euler angles in m_camOrientation
-	//m_camLookDirection.x = sin((m_camOrientation.y) * 3.1415 / 180);
-	//m_camLookDirection.z = cos((m_camOrientation.y) * 3.1415 / 180);
-	//m_camLookDirection.Normalize();
+	if (Input->camFocusCalled == true)
+	{
+		if (Input->rotRight)
+		{
+			m_camOrientation.y -= m_camRotRate;
+		}
+		if (Input->rotLeft)
+		{
+			m_camOrientation.y += m_camRotRate;
+		}
+	}
 
-	////create right vector from look Direction
-	//m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 
 	if (Input->mouseRightPressed)
 	{
@@ -89,40 +94,11 @@ void Camera::Update(InputCommands* Input)
 			m_mouseStartPos.y = p.y;
 
 			Vector2 newCamLook = MouseRotate(m_mouseStartPos.x, m_mouseStartPos.y);
-			//m_camMouseAngle.y = newCamLook.x;
-			//m_camMouseAngle.z = newCamLook.y;
 
 			m_camOrientation.y += newCamLook.y;
 			m_camOrientation.z += newCamLook.x;
-			//m_camLookDirection.x += newCamLook.x;
-			//m_camLookDirection.y += newCamLook.y;
-		}
-		else
-		{
-			//m_camOrientation.y = 0;
 		}
 	}
-
-	if (Input->mouseRightReleased)
-	{
-		/*POINT p2;
-		if (GetCursorPos(&p2))
-		{
-			m_mouseEndPos.x = p2.x;
-			m_mouseEndPos.y = p2.y;
-		}*/
-	}
-
-	//create look direction from Euler angles in m_camOrientation
-	//m_camLookDirection.x = sin((m_camOrientation.y) * 3.1415 / 180);
-	//m_camLookDirection.z = cos((m_camOrientation.y) * 3.1415 / 180);
-
-	////x = rCos O Cos F
-	//m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.z) * 3.1415 / 180);
-	////y = rsin F
-	//m_camLookDirection.y = sin((m_camOrientation.y) * 3.1415 / 180);
-	////z = rSin O Cos F
-	//m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.z) * 3.1415 / 180);
 
 
 	//works kinda
@@ -138,32 +114,38 @@ void Camera::Update(InputCommands* Input)
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 
-	//process input and update 
-	if (Input->forward)
+	if (Input->camFocusCalled == false)
 	{
-		m_camPosition += m_camLookDirection * m_movespeed;
+		//process input and update 
+		if (Input->forward)
+		{
+			m_camPosition += m_camLookDirection * m_movespeed;
+		}
+		if (Input->back)
+		{
+			m_camPosition -= m_camLookDirection * m_movespeed;
+		}
+		if (Input->right)
+		{
+			m_camPosition += m_camRight * m_movespeed;
+		}
+		if (Input->left)
+		{
+			m_camPosition -= m_camRight * m_movespeed;
+		}
 	}
-	if (Input->back)
+	else
 	{
-		m_camPosition -= m_camLookDirection * m_movespeed;
-	}
-	if (Input->right)
-	{
-		m_camPosition += m_camRight * m_movespeed;
-	}
-	if (Input->left)
-	{
-		m_camPosition -= m_camRight * m_movespeed;
+		if (Input->forward)
+		{
+			focusDistance -= m_movespeed;
+		}
+		if (Input->back)
+		{
+			focusDistance += m_movespeed;
+		}
 	}
 	
-	
-
-	/*if (Input->camFocusCalled)
-	{
-		
-		FocusOnObject();
-	}*/
-
 
 	//update lookat point
 	m_camLookAt = m_camPosition + m_camLookDirection;
@@ -171,12 +153,11 @@ void Camera::Update(InputCommands* Input)
 	if (Input->camFocusCalled)
 	{
 		FocusOnObject();
-		//m_camOrientation = Vector3(0, 0, 0);
 	}
 
 	if (Input->arcballMode == true)
 	{
-		ArcballCamera();
+		ArcballCamera(Input);
 	}
 
 
@@ -210,10 +191,27 @@ Vector2 Camera::MouseRotate(float m_x, float m_y)
 	return new_rot;
 }
 
-void Camera::ArcballCamera()
+void Camera::ArcballCamera(InputCommands* Input)
 {
 	m_camLookAt = selectedObjectPosition;
-	m_camPosition = selectedObjectPosition - (m_camLookDirection * focusDistance);
+	cameraDist = m_camLookDirection * focusDistance;
+
+	////process input and update 
+	//if (Input->forward)
+	//{
+	//	cameraDist -= m_camLookDirection * m_movespeed;
+	//}
+	//else if (Input->back)
+	//{
+	//	cameraDist += m_camLookDirection * m_movespeed;
+	//}
+	//else
+	//{
+	//	cameraDist = m_camLookDirection * focusDistance;
+	//}
+
+	m_camPosition = selectedObjectPosition - cameraDist;
+	
 }
 
 void Camera::FocusOnObject()

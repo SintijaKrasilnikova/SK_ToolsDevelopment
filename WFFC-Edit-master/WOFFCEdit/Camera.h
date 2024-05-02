@@ -26,12 +26,13 @@ public:
 private:
     DirectX::SimpleMath::Vector2 MouseRotate(float m_x, float m_y);
     void FocusOnObject();
-    void ArcballCamera();
+    void ArcballCamera(InputCommands* Input);
     
 
     //int m_selectedObjectID = -1;
     DirectX::SimpleMath::Vector3 selectedObjectPosition;
     DirectX::SimpleMath::Vector3 oldCameraPos;
+    DirectX::SimpleMath::Vector3 cameraDist;
     bool canFocus;
     float focusDistance;
 
