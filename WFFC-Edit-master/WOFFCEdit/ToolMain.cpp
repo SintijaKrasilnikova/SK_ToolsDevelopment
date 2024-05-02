@@ -27,6 +27,7 @@ ToolMain::ToolMain()
 	m_toolInputCommands.mouse_Y = 0;
 
 	m_toolInputCommands.camFocusCalled = false;
+	m_toolInputCommands.arcballMode = false;
 	
 }
 
@@ -419,5 +420,11 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.camFocusCalled = true;
 	}
 	else m_toolInputCommands.camFocusCalled = false;
+
+	//arcball camera mode
+	if (m_keyArray['G'])
+	{
+		m_toolInputCommands.arcballMode = true;
+	}
 	
 }

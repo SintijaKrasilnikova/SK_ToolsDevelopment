@@ -14,6 +14,7 @@ Camera::Camera()
 	m_camRotRate = 3.0;
 	m_camRotRateMouse = 7.f;
 	m_movespeed = 0.30;
+	m_movespeedUsual = 0.30;
 
 	//camera
 	m_camPosition.x = 0.0f;
@@ -123,6 +124,7 @@ void Camera::Update(InputCommands* Input)
 	////z = rSin O Cos F
 	//m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.z) * 3.1415 / 180);
 
+
 	//works kinda
 	//x = rCos O Cos F
 	m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos((m_camOrientation.z) * 3.1415 / 180);
@@ -136,7 +138,7 @@ void Camera::Update(InputCommands* Input)
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 
-	//process input and update stuff
+	//process input and update 
 	if (Input->forward)
 	{
 		m_camPosition += m_camLookDirection * m_movespeed;
@@ -153,12 +155,15 @@ void Camera::Update(InputCommands* Input)
 	{
 		m_camPosition -= m_camRight * m_movespeed;
 	}
+	
+	
 
 	/*if (Input->camFocusCalled)
 	{
 		
 		FocusOnObject();
 	}*/
+
 
 	//update lookat point
 	m_camLookAt = m_camPosition + m_camLookDirection;
@@ -168,6 +173,12 @@ void Camera::Update(InputCommands* Input)
 		FocusOnObject();
 		//m_camOrientation = Vector3(0, 0, 0);
 	}
+
+	if (Input->arcballMode == true)
+	{
+		ArcballCamera();
+	}
+
 
 	//apply camera vectors
 	m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
@@ -199,6 +210,12 @@ Vector2 Camera::MouseRotate(float m_x, float m_y)
 	return new_rot;
 }
 
+void Camera::ArcballCamera()
+{
+	m_camLookAt = selectedObjectPosition;
+	m_camPosition = selectedObjectPosition - (m_camLookDirection * focusDistance);
+}
+
 void Camera::FocusOnObject()
 {
 	float focusTransitionSpeed = 3.f;
@@ -206,15 +223,11 @@ void Camera::FocusOnObject()
 	if(canFocus == true)
 	{
 		inFocusTransition = true;
-		/*Vector3 lookAtDifference = m_camLookDirection * focusDistance;
-		m_camPosition = selectedObjectPosition - lookAtDifference;
-		m_camLookAt = selectedObjectPosition;*/
 
 
 		m_camLookAt = selectedObjectPosition;
 		DirectX::SimpleMath::Vector3 lookAtDifference = m_camLookDirection * focusDistance;
 		DirectX::SimpleMath::Vector3 goalPosition = selectedObjectPosition - lookAtDifference;
-		//goalPosition += Vector3(focusTransitionSpeed, focusTransitionSpeed, focusTransitionSpeed);
 
 		if (m_camPosition.x < goalPosition.x - focusTransitionSpeed - 0.1f)
 		{
@@ -254,62 +267,10 @@ void Camera::FocusOnObject()
 		{
 			m_camPosition.z = goalPosition.z;
 		}
-
-		/*if(m_camPosition.x < goalPosition.x - focusTransitionSpeed - 0.1f)
-		{
-			m_camPosition.x += m_camLookDirection.x * focusTransitionSpeed;
-		}
-		else if(m_camPosition.x > goalPosition.x + focusTransitionSpeed + 0.1f)
-		{
-			m_camPosition.x -= m_camLookDirection.x * focusTransitionSpeed;
-		}
-		else
-		{
-			m_camPosition.x = goalPosition.x;
-		}*/
-
-		/*if (m_camPosition.y < goalPosition.y - focusTransitionSpeed - 0.1f)
-		{
-			m_camPosition.y -= m_camLookDirection.y * focusTransitionSpeed;
-		}
-		else if (m_camPosition.y > goalPosition.y + focusTransitionSpeed + 0.1f)
-		{
-			m_camPosition.y += m_camLookDirection.y * focusTransitionSpeed;
-		}
-		else
-		{
-			m_camPosition.y = goalPosition.y;
-		}
-
-		if (m_camPosition.z < goalPosition.z - focusTransitionSpeed - 0.1f)
-		{
-			m_camPosition.z += m_camLookDirection.z * focusTransitionSpeed;
-		}
-		else if (m_camPosition.z > goalPosition.z + focusTransitionSpeed + 0.1f)
-		{
-			m_camPosition.z -= m_camLookDirection.z * focusTransitionSpeed;
-		}
-		else
-		{
-			m_camPosition.z = goalPosition.z;
-		}*/
-
-		/*if (m_camPosition.y < goalPosition.y)
-		{
-			m_camPosition.y += m_camLookDirection.y * focusTransitionSpeed;
-		}
-
-		if (m_camPosition.z < goalPosition.z)
-		{
-			m_camPosition.z += m_camLookDirection.z * focusTransitionSpeed;
-		}*/
-		/*if(m_camPosition.x > goalPosition.x)
-		{
-			m_camPosition.x -= m_camLookDirection.x * focusTransitionSpeed;
-		}*/
-		//m_camLookAt = selectedObjectPosition;
+		
 	}
 }
+
 
 //Vector2 Camera::Turn(float d_x, float d_y)
 //{

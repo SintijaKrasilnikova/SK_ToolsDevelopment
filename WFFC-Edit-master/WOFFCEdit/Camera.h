@@ -26,10 +26,12 @@ public:
 private:
     DirectX::SimpleMath::Vector2 MouseRotate(float m_x, float m_y);
     void FocusOnObject();
+    void ArcballCamera();
     
 
     //int m_selectedObjectID = -1;
     DirectX::SimpleMath::Vector3 selectedObjectPosition;
+    DirectX::SimpleMath::Vector3 oldCameraPos;
     bool canFocus;
     float focusDistance;
 
@@ -46,6 +48,7 @@ private:
 
     //functionality
     float								m_movespeed;
+    float								m_movespeedUsual;
 
 
     //// Input devices.

@@ -20,4 +20,5 @@ struct InputCommands
 	int mouse_Y;
 
 	bool camFocusCalled;
+	bool arcballMode;
 };

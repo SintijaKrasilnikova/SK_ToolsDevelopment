@@ -584,6 +584,7 @@ void Game::CreateWindowSizeDependentResources()
     );
 
     m_batchEffect->SetProjection(m_projection);
+    //thisCamera->SetWindowSize(size.right, size.bottom);
 	
 }
 
