@@ -16,6 +16,8 @@ public:
     DirectX::SimpleMath::Matrix GetCameraView();
     DirectX::SimpleMath::Vector3 GetCameraPosition();
     DirectX::SimpleMath::Vector3 GetCameraLookAt();
+    DirectX::SimpleMath::Vector3 GetCameraRight();
+    DirectX::SimpleMath::Vector3 GetCameraUp();
     void Update(InputCommands* Input);
     void SetWindowSize(float width, float height);
 
@@ -69,6 +71,7 @@ private:
     DirectX::SimpleMath::Vector3		m_camLookAt;
     DirectX::SimpleMath::Vector3		m_camLookDirection;
     DirectX::SimpleMath::Vector3		m_camRight;
+    DirectX::SimpleMath::Vector3		m_camUp;
     DirectX::SimpleMath::Vector3		m_camMouseAngle;
     float m_camRotRate;
     float m_camRotRateMouse;

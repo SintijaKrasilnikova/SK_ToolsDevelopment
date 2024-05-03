@@ -28,6 +28,9 @@ ToolMain::ToolMain()
 
 	m_toolInputCommands.camFocusCalled = false;
 	m_toolInputCommands.arcballMode = false;
+
+	m_toolInputCommands.moveObjectRight =false;
+	m_toolInputCommands.moveObjectLeft = false;
 	
 }
 
@@ -427,5 +430,29 @@ void ToolMain::UpdateInput(MSG * msg)
 		//m_toolInputCommands.arcballMode = true;
 		m_toolInputCommands.camFocusCalled = false;
 	}
+
+	if (m_keyArray[VK_LEFT])
+	{
+		m_toolInputCommands.moveObjectLeft = true;
+	}
+	else m_toolInputCommands.moveObjectLeft = false;
+
+	if (m_keyArray[VK_RIGHT])
+	{
+		m_toolInputCommands.moveObjectRight = true;
+	}
+	else m_toolInputCommands.moveObjectRight = false;
+
+	if (m_keyArray[VK_UP])
+	{
+		m_toolInputCommands.moveObjectForward = true;
+	}
+	else m_toolInputCommands.moveObjectForward = false;
+
+	if (m_keyArray[VK_DOWN])
+	{
+		m_toolInputCommands.moveObjectBack = true;
+	}
+	else m_toolInputCommands.moveObjectBack = false;
 	
 }

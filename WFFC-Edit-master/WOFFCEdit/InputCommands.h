@@ -21,4 +21,10 @@ struct InputCommands
 
 	bool camFocusCalled;
 	bool arcballMode;
+
+	bool moveObjectRight;
+	bool moveObjectLeft;
+
+	bool moveObjectForward;
+	bool moveObjectBack;
 };

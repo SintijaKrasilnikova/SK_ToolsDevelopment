@@ -21,6 +21,7 @@ Game::Game()
 	m_displayList.clear();
 
 	thisCamera = new Camera();
+    objectTransformer = new ObjectTransformer();
 	
 	//initial Settings
 	//modes
@@ -62,6 +63,7 @@ void Game::Initialize(HWND window, int width, int height)
     CreateWindowSizeDependentResources();
 
 	thisCamera->SetWindowSize(width, height);
+    objectTransformer->SetCamera(thisCamera);
 
 	GetClientRect(window, &m_ScreenDimensions);
 	//thisCamera->SetWindowSize(m_ScreenDimensions.bottom, m_ScreenDimensions.left);
@@ -172,11 +174,16 @@ int Game::MousePicking()
         thisCamera->setCanFocus(true);
         //send to camera the selected objects location
         thisCamera->setFocusObjectsPos(m_displayList[selectedID].m_position);
+
+        //objectTransformer->SetDisplayList(&m_displayList);
+        objectTransformer->SetSelectedObject(&m_displayList[selectedID]);
+        objectTransformer->SetIsObjectSelected(true, selectedID);
     }
     if(selectedID == -1)
     {
         //camera has nothing to focus on
         thisCamera->setCanFocus(false);
+        objectTransformer->SetIsObjectSelected(false, -1);
     }
 
 	//if we got a hit.  return it.  
@@ -188,6 +195,7 @@ int Game::MousePicking()
 void Game::Update(DX::StepTimer const& timer)
 {
 	thisCamera->Update(&m_InputCommands);
+    objectTransformer->Update(&m_InputCommands);
 
     m_batchEffect->SetView(thisCamera->GetCameraView());
     m_batchEffect->SetWorld(Matrix::Identity);

@@ -113,6 +113,7 @@ void Camera::Update(InputCommands* Input)
 
 	//create right vector from look Direction
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
+	m_camRight.Cross(Vector3::UnitY, m_camUp);
 
 	if (Input->camFocusCalled == false)
 	{
@@ -160,7 +161,8 @@ void Camera::Update(InputCommands* Input)
 		ArcballCamera(Input);
 	}
 
-
+	//m_camLookDirection.Cross(DirectX::SimpleMath::Vector3::UnitY, m_camRight);
+	//m_camLookDirection.Cross(DirectX::SimpleMath::Vector3::UnitZ, m_camForward);
 	//apply camera vectors
 	m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
 }
@@ -292,4 +294,14 @@ DirectX::SimpleMath::Vector3 Camera::GetCameraPosition()
 DirectX::SimpleMath::Vector3 Camera::GetCameraLookAt()
 {
 	return m_camLookAt;
+}
+
+DirectX::SimpleMath::Vector3 Camera::GetCameraRight()
+{
+	return m_camRight;
+}
+
+DirectX::SimpleMath::Vector3 Camera::GetCameraUp()
+{
+	return m_camUp;
 }

@@ -13,6 +13,7 @@
 #include "InputCommands.h"
 #include <vector>
 #include "Camera.h"
+#include "ObjectTransformer.h"
 
 
 // A basic game implementation that creates a D3D11 device and
@@ -69,6 +70,7 @@ private:
 	void XM_CALLCONV DrawGrid(DirectX::FXMVECTOR xAxis, DirectX::FXMVECTOR yAxis, DirectX::FXMVECTOR origin, size_t xdivs, size_t ydivs, DirectX::GXMVECTOR color);
 
 	Camera* thisCamera;
+	ObjectTransformer* objectTransformer;
 
 	//tool specific
 	std::vector<DisplayObject>			m_displayList;
