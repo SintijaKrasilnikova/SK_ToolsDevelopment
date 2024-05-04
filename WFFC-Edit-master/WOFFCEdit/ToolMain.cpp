@@ -31,6 +31,18 @@ ToolMain::ToolMain()
 
 	m_toolInputCommands.moveObjectRight =false;
 	m_toolInputCommands.moveObjectLeft = false;
+
+	m_toolInputCommands.rotateObjectYawRight = false;
+	m_toolInputCommands.rotateObjectYawLeft = false;
+
+	m_toolInputCommands.rotateObjectPitchRight = false;
+	m_toolInputCommands.rotateObjectPitchLeft = false;
+
+	m_toolInputCommands.rotateObjectRollRight = false;
+	m_toolInputCommands.rotateObjectRollLeft = false;
+
+	m_toolInputCommands.scaleDown = false;
+	m_toolInputCommands.scaleUp = false;
 	
 }
 
@@ -336,47 +348,21 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 
-	case WM_RBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
-		//set some flag for the mouse button in inputcommands
-	/*	LPPOINT p;
-		GetCursorPos(p);
-		m_toolInputCommands.mouseLeftXpos = p->x;
-		m_toolInputCommands.mouseLeftYpos = p->y;*/
-
-		//POINT p;
-		//if (GetCursorPos(&p))
-		//{
-		//	
-		//}
+	case WM_RBUTTONDOWN:	
 		ShowCursor(false);
 		SetCursorPos(m_width / 2, m_height / 2);
-		//m_toolInputCommands.mouseLeftReleased = false;
-		//m_toolInputCommands.mouseLeftPressed = true;
 
 		m_toolInputCommands.mouseRightReleased = false;
 		m_toolInputCommands.mouseRightPressed = true;
-		
-
-		
-		//m_mousePressed = true;
-		//m_mouseReleased = false;
-
 		break;
 
-	case WM_RBUTTONUP:	//mouse button down,  you will probably need to check when its up too
-		//set some flag for the mouse button in inputcommands
-		/*LPPOINT p;
-		GetCursorPos(p);
-		m_mousePosX = p->x;
-		m_mousePosY = p->y;*/
+	case WM_RBUTTONUP:
+
 		ShowCursor(true);
 		m_toolInputCommands.mouseRightReleased = true;
 		m_toolInputCommands.mouseRightPressed = false;
-		//m_mouseReleased = true;
-		//m_mousePressed = false;
 
 		break;
-
 	}
 	 
 
@@ -405,7 +391,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	}
 	else m_toolInputCommands.right = false;
 
-	//rotation
+	//rotation or up/down
 	if (m_keyArray['E'])
 	{
 		m_toolInputCommands.rotRight = true;
@@ -454,5 +440,55 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.moveObjectBack = true;
 	}
 	else m_toolInputCommands.moveObjectBack = false;
+
+	//VK_NUMPAD4
+	if (m_keyArray['O'])
+	{
+		m_toolInputCommands.rotateObjectYawLeft = true;
+	}
+	else m_toolInputCommands.rotateObjectYawLeft = false;
+
+	if (m_keyArray['P'])
+	{
+		m_toolInputCommands.rotateObjectYawRight = true;
+	}
+	else m_toolInputCommands.rotateObjectYawRight = false;
+
+	if (m_keyArray['K'])
+	{
+		m_toolInputCommands.rotateObjectPitchLeft = true;
+	}
+	else m_toolInputCommands.rotateObjectPitchLeft = false;
+
+	if (m_keyArray['L'])
+	{
+		m_toolInputCommands.rotateObjectPitchRight = true;
+	}
+	else m_toolInputCommands.rotateObjectPitchRight = false;
+
+	if (m_keyArray['N'])
+	{
+		m_toolInputCommands.rotateObjectRollLeft = true;
+	}
+	else m_toolInputCommands.rotateObjectRollLeft = false;
+
+	if (m_keyArray['M'])
+	{
+		m_toolInputCommands.rotateObjectRollRight = true;
+	}
+	else m_toolInputCommands.rotateObjectRollRight = false;
+
+	//VK_ADD
+	if (m_keyArray[VK_ADD])
+	{
+		m_toolInputCommands.scaleUp= true;
+	}
+	else m_toolInputCommands.scaleUp = false;
+
+	if (m_keyArray[VK_SUBTRACT])
+	{
+		m_toolInputCommands.scaleDown = true;
+	}
+	else m_toolInputCommands.scaleDown = false;
 	
 }

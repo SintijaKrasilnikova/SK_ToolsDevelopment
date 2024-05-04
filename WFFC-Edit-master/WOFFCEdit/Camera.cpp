@@ -72,7 +72,7 @@ void Camera::Update(InputCommands* Input)
 		m_camPosition.y -= m_movespeed;
 	}
 
-	if (Input->camFocusCalled == true)
+	if (Input->camFocusCalled == true && canFocus == true)
 	{
 		if (Input->rotRight)
 		{

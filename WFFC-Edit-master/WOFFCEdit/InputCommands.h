@@ -27,4 +27,16 @@ struct InputCommands
 
 	bool moveObjectForward;
 	bool moveObjectBack;
+
+	bool rotateObjectYawRight;
+	bool rotateObjectYawLeft;
+
+	bool rotateObjectPitchRight;
+	bool rotateObjectPitchLeft;
+
+	bool rotateObjectRollRight;
+	bool rotateObjectRollLeft;
+
+	bool scaleUp;
+	bool scaleDown;
 };

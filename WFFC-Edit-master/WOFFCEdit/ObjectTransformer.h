@@ -25,6 +25,8 @@ private:
     bool isObjectSelected = false;
     int currentSelectedID = -1;
     float objectMoveSpeed;
+    float objectRotSpeed;
+    float objectScaleSpeed;
 
 
 };
