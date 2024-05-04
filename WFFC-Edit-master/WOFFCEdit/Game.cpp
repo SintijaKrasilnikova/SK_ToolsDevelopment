@@ -175,7 +175,6 @@ int Game::MousePicking()
         //send to camera the selected objects location
         thisCamera->setFocusObjectsPos(m_displayList[selectedID].m_position);
 
-        //objectTransformer->SetDisplayList(&m_displayList);
         objectTransformer->SetSelectedObject(&m_displayList[selectedID]);
         objectTransformer->SetIsObjectSelected(true, selectedID);
     }
@@ -188,6 +187,79 @@ int Game::MousePicking()
 
 	//if we got a hit.  return it.  
 	return selectedID;
+}
+
+std::vector<SceneObject> Game::DisplayListToScenegraph()
+{
+	std::vector<SceneObject> objects;
+
+	//basically reverses the build display list
+	//prepares the info from displayList to send to scenograph
+	//since values are changed in the displayList, it has to be sent back for saving in the database
+	for (unsigned int i = 0; i < m_displayList.size(); i++)
+	{
+		SceneObject newSceneObject;
+		newSceneObject.ID = m_displayList[i].m_ID;
+		newSceneObject.chunk_ID = 0;
+		newSceneObject.model_path = m_displayList[i].m_modelPath;
+		newSceneObject.tex_diffuse_path = m_displayList[i].m_texturePath;
+		newSceneObject.posX = m_displayList[i].m_position.x;
+		newSceneObject.posY = m_displayList[i].m_position.y;
+		newSceneObject.posZ = m_displayList[i].m_position.z;
+		newSceneObject.rotX = m_displayList[i].m_orientation.x;
+		newSceneObject.rotY = m_displayList[i].m_orientation.y;
+		newSceneObject.rotZ = m_displayList[i].m_orientation.z;
+		newSceneObject.scaX = m_displayList[i].m_scale.x;
+		newSceneObject.scaY = m_displayList[i].m_scale.y;
+		newSceneObject.scaZ = m_displayList[i].m_scale.z;
+		newSceneObject.render = false;
+		newSceneObject.collision = 0;
+		newSceneObject.collision_mesh = "";
+		newSceneObject.collectable = false;
+		newSceneObject.destructable = false;
+		newSceneObject.health_amount = 0;
+		newSceneObject.editor_render = m_displayList[i].m_render;
+		newSceneObject.editor_texture_vis = true;
+		newSceneObject.editor_normals_vis = false;
+		newSceneObject.editor_collision_vis = false;
+		newSceneObject.editor_pivot_vis = false;
+		newSceneObject.pivotX = 0;
+		newSceneObject.pivotY = 0;
+		newSceneObject.pivotZ = 0;
+		newSceneObject.snapToGround = false;
+		newSceneObject.AINode = false;
+		newSceneObject.audio_path = "";
+		newSceneObject.volume = 0;
+		newSceneObject.pitch = 0;
+		newSceneObject.pan = 0;
+		newSceneObject.one_shot = false;
+		newSceneObject.play_on_init = false;
+		newSceneObject.play_in_editor = false;
+		newSceneObject.min_dist = 0;
+		newSceneObject.max_dist = 0;
+		newSceneObject.camera = false;
+		newSceneObject.path_node = false;
+		newSceneObject.path_node_start = false;
+		newSceneObject.path_node_end = false;
+		newSceneObject.parent_id = 0;
+		newSceneObject.editor_wireframe = false;
+		newSceneObject.name = "Name";
+
+		newSceneObject.light_type = m_displayList[i].m_light_type;
+		newSceneObject.light_diffuse_r = m_displayList[i].m_light_diffuse_r;
+		newSceneObject.light_diffuse_g = m_displayList[i].m_light_diffuse_g;
+		newSceneObject.light_diffuse_b = m_displayList[i].m_light_diffuse_b;
+		newSceneObject.light_specular_r = m_displayList[i].m_light_specular_r;
+		newSceneObject.light_specular_g = m_displayList[i].m_light_specular_g;
+		newSceneObject.light_specular_b = m_displayList[i].m_light_specular_b;
+		newSceneObject.light_spot_cutoff = m_displayList[i].m_light_spot_cutoff;
+		newSceneObject.light_constant = m_displayList[i].m_light_constant;
+		newSceneObject.light_linear = m_displayList[i].m_light_linear;
+		newSceneObject.light_quadratic = m_displayList[i].m_light_quadratic;
+
+		objects.push_back(newSceneObject);
+	}
+	return objects;
 }
 
 
@@ -425,10 +497,14 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		std::wstring modelwstr = StringToWCHART(SceneGraph->at(i).model_path);							//convect string to Wchar
 		newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
 
+        //sets the model path fo reload in scenograph
+        newDisplayObject.m_modelPath = SceneGraph->at(i).model_path;
 		//Load Texture
 		std::wstring texturewstr = StringToWCHART(SceneGraph->at(i).tex_diffuse_path);								//convect string to Wchar
 		HRESULT rs;
 		rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+        //sets the texture path fo reload in scenograph
+        newDisplayObject.m_texturePath = SceneGraph->at(i).tex_diffuse_path;
 
 		//if texture fails.  load error default
 		if (rs)

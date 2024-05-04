@@ -54,7 +54,7 @@ public:
 	void ClearDisplayList();
 
 	int	 MousePicking();
-
+	std::vector<SceneObject> DisplayListToScenegraph();
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();

@@ -210,6 +210,7 @@ void ToolMain::onActionLoad()
 
 void ToolMain::onActionSave()
 {
+	m_sceneGraph = m_d3dRenderer.DisplayListToScenegraph();
 	//SQL
 	int rc;
 	char *sqlCommand;
