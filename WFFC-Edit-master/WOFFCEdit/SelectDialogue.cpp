@@ -27,6 +27,8 @@ SelectDialogue::SelectDialogue(CWnd * pParent)			//constructor used in modeless
 {
 }
 
+
+
 SelectDialogue::~SelectDialogue()
 {
 }

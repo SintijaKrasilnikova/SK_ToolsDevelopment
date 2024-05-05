@@ -61,6 +61,7 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ObjectTransformer.cpp" />
+    <ClCompile Include="ModifyObjectDialogue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -112,6 +113,7 @@
     </ClInclude>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ObjectTransformer.h" />
+    <ClInclude Include="ModifyObjectDialogue.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

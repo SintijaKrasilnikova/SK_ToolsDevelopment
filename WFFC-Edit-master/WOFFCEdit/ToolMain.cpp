@@ -210,7 +210,9 @@ void ToolMain::onActionLoad()
 
 void ToolMain::onActionSave()
 {
+	//re-populate the scenegraph
 	m_sceneGraph = m_d3dRenderer.DisplayListToScenegraph();
+
 	//SQL
 	int rc;
 	char *sqlCommand;
