@@ -495,3 +495,18 @@ void ToolMain::UpdateInput(MSG * msg)
 	else m_toolInputCommands.scaleDown = false;
 	
 }
+
+void ToolMain::UpdateScenegraphFromGame()
+{
+	m_sceneGraph = m_d3dRenderer.DisplayListToScenegraph();
+}
+
+std::vector<DisplayObject>* ToolMain::GetDisplayList()
+{
+	return m_d3dRenderer.GetDisplayList();
+}
+
+void ToolMain::IsSelectionAvailable(bool canSelect)
+{
+	m_d3dRenderer.SetCanSelect(canSelect);
+}

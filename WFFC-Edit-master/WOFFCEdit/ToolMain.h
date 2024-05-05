@@ -25,6 +25,9 @@ public: //methods
 
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
+	void UpdateScenegraphFromGame();
+	std::vector<DisplayObject>* GetDisplayList();
+	void IsSelectionAvailable(bool canSelect);
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk

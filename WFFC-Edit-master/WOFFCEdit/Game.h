@@ -55,6 +55,8 @@ public:
 
 	int	 MousePicking();
 	std::vector<SceneObject> DisplayListToScenegraph();
+	std::vector<DisplayObject>* GetDisplayList() { return &m_displayList; }
+	void SetCanSelect(bool isSelectAllowed) { canSelect = isSelectAllowed; }
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -80,6 +82,7 @@ private:
 	//functionality
 	float								m_movespeed;
 	RECT		m_ScreenDimensions;
+	bool canSelect = true;
 
 	////camera
 	//DirectX::SimpleMath::Vector3		m_camPosition;
