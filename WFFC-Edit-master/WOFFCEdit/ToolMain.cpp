@@ -43,7 +43,9 @@ ToolMain::ToolMain()
 
 	m_toolInputCommands.scaleDown = false;
 	m_toolInputCommands.scaleUp = false;
-	
+
+	m_toolInputCommands.copyCalled = false;
+	m_toolInputCommands.pasteCalled = false;
 }
 
 
@@ -493,6 +495,19 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.scaleDown = true;
 	}
 	else m_toolInputCommands.scaleDown = false;
+
+	//copy
+	if(m_keyArray[VK_CONTROL] && m_keyArray['C'])
+	{
+		m_toolInputCommands.copyCalled = true;
+		m_toolInputCommands.pasteCalled = false;
+	}
+	//paste
+	if (m_keyArray[VK_CONTROL] && m_keyArray['V'])
+	{
+		m_toolInputCommands.pasteCalled = true;
+		m_toolInputCommands.copyCalled = false;
+	}
 	
 }
 
@@ -509,4 +524,10 @@ std::vector<DisplayObject>* ToolMain::GetDisplayList()
 void ToolMain::IsSelectionAvailable(bool canSelect)
 {
 	m_d3dRenderer.SetCanSelect(canSelect);
+}
+
+void ToolMain::SetCopyPasteCalled(bool isCopyCalled, bool isPasteCalled)
+{
+	m_toolInputCommands.pasteCalled = isPasteCalled;
+	m_toolInputCommands.copyCalled = isCopyCalled;
 }

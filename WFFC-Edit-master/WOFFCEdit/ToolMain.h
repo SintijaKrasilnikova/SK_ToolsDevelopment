@@ -28,6 +28,7 @@ public: //methods
 	void UpdateScenegraphFromGame();
 	std::vector<DisplayObject>* GetDisplayList();
 	void IsSelectionAvailable(bool canSelect);
+	void SetCopyPasteCalled(bool isCopyCalled, bool isPasteCalled);
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk

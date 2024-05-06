@@ -39,4 +39,7 @@ struct InputCommands
 
 	bool scaleUp;
 	bool scaleDown;
+
+	bool copyCalled;
+	bool pasteCalled;
 };

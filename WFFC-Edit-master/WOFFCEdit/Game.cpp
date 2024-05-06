@@ -179,12 +179,15 @@ int Game::MousePicking()
 
 			objectTransformer->SetSelectedObject(&m_displayList[selectedID]);
 			objectTransformer->SetIsObjectSelected(true, selectedID);
+
+			m_currentSelectedDisplayObject = &m_displayList[selectedID];
 		}
 		if (selectedID == -1)
 		{
 			//camera has nothing to focus on
 			thisCamera->setCanFocus(false);
 			objectTransformer->SetIsObjectSelected(false, -1);
+			m_currentSelectedDisplayObject = nullptr;
 		}
 	}
 	//if we got a hit.  return it.  
@@ -265,11 +268,38 @@ std::vector<SceneObject> Game::DisplayListToScenegraph()
 }
 
 
+void Game::PasteObject()
+{
+	if(m_objectToCopy != nullptr)
+	{
+		int displayEndValue = m_displayList.size();
+		m_displayList.push_back(*m_objectToCopy);
+		m_displayList[displayEndValue].m_position.x += 2.f;
+		m_objectToCopy = nullptr;
+		m_InputCommands.pasteCalled = false;
+	}
+}
+
+void Game::CopyObject()
+{
+	m_objectToCopy = m_currentSelectedDisplayObject;
+}
+
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
 	thisCamera->Update(&m_InputCommands);
     objectTransformer->Update(&m_InputCommands);
+
+	if (m_InputCommands.pasteCalled)
+	{
+		PasteObject();
+	}
+
+	if (m_InputCommands.copyCalled)
+	{
+		CopyObject();
+	}
 
     m_batchEffect->SetView(thisCamera->GetCameraView());
     m_batchEffect->SetWorld(Matrix::Identity);
@@ -505,7 +535,7 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		std::wstring texturewstr = StringToWCHART(SceneGraph->at(i).tex_diffuse_path);								//convect string to Wchar
 		HRESULT rs;
 		rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
-        //sets the texture path fo reload in scenograph
+        //sets the texture path fo reload in scenegraph
         newDisplayObject.m_texturePath = SceneGraph->at(i).tex_diffuse_path;
 
 		//if texture fails.  load error default

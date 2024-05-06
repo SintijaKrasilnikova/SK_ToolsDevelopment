@@ -57,6 +57,8 @@ public:
 	std::vector<SceneObject> DisplayListToScenegraph();
 	std::vector<DisplayObject>* GetDisplayList() { return &m_displayList; }
 	void SetCanSelect(bool isSelectAllowed) { canSelect = isSelectAllowed; }
+	void PasteObject();
+	void CopyObject();
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -73,6 +75,8 @@ private:
 
 	Camera* thisCamera;
 	ObjectTransformer* objectTransformer;
+	DisplayObject* m_currentSelectedDisplayObject;
+	DisplayObject* m_objectToCopy;
 
 	//tool specific
 	std::vector<DisplayObject>			m_displayList;
