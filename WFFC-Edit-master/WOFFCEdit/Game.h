@@ -60,6 +60,8 @@ public:
 	void PasteObject();
 	void CopyObject();
 
+	void MultiSelectionEnded();
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -87,6 +89,11 @@ private:
 	float								m_movespeed;
 	RECT		m_ScreenDimensions;
 	bool canSelect = true;
+
+	std::vector<DisplayObject> multipleSelectedList;
+	std::vector<int> multipleSelectedIDList;
+	bool isMultiSelectInProcess = false;
+	bool canSendMultiList = false;
 
 	////camera
 	//DirectX::SimpleMath::Vector3		m_camPosition;

@@ -46,6 +46,8 @@ ToolMain::ToolMain()
 
 	m_toolInputCommands.copyCalled = false;
 	m_toolInputCommands.pasteCalled = false;
+
+	m_toolInputCommands.multipleSelection = false;
 }
 
 
@@ -350,6 +352,9 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_LBUTTONDOWN:
 		//mouse left pressed.	
 		m_toolInputCommands.mouseLeftPressed = true;
+		if (!m_keyArray[VK_CONTROL])
+			m_d3dRenderer.MultiSelectionEnded();
+			
 		break;
 
 
@@ -508,7 +513,12 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.pasteCalled = true;
 		m_toolInputCommands.copyCalled = false;
 	}
-	
+	//multiple selection
+	if (m_keyArray[VK_CONTROL])
+	{
+		m_toolInputCommands.multipleSelection = true;
+	}
+	else m_toolInputCommands.multipleSelection = false;
 }
 
 void ToolMain::UpdateScenegraphFromGame()

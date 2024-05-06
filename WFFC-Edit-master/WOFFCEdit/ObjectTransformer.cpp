@@ -15,6 +15,21 @@ ObjectTransformer::~ObjectTransformer()
 
 void ObjectTransformer::Update(InputCommands* Input)
 {
+	MoveSingle(Input);
+	MoveMultiple(Input);
+}
+
+void ObjectTransformer::SetMultipleSelected(bool areMultiSelected)
+{
+	areMultipleSelected = areMultiSelected;
+	if(areMultiSelected == false)
+	{
+		selectedList.clear();
+	}
+}
+
+void ObjectTransformer::MoveSingle(InputCommands* Input)
+{
 	if (isObjectSelected == true)
 	{
 		if (Input->moveObjectRight)
@@ -37,7 +52,7 @@ void ObjectTransformer::Update(InputCommands* Input)
 			selectedObject->m_position += objectMoveSpeed * camera->GetCameraUp();
 		}
 
-		if(Input->rotateObjectYawLeft)
+		if (Input->rotateObjectYawLeft)
 		{
 			selectedObject->m_orientation.x -= objectRotSpeed;
 		}
@@ -73,4 +88,26 @@ void ObjectTransformer::Update(InputCommands* Input)
 			selectedObject->m_scale -= DirectX::SimpleMath::Vector3(objectScaleSpeed, objectScaleSpeed, objectScaleSpeed);
 		}
 	}
+}
+
+void ObjectTransformer::MoveMultiple(InputCommands* Input)
+{
+	if(areMultipleSelected && selectedList.empty() != true )
+	{
+		for (unsigned int i = 0; i < selectedList.size(); i++)
+		{
+			if (Input->moveObjectRight)
+			{
+				//auto id = selectedIDList[i];
+				//displayList[id].at(id).m_position += objectMoveSpeed * camera->GetCameraRight();
+				//displayList[id].data()->m_position += objectMoveSpeed * camera->GetCameraRight();
+				selectedList[i]->m_position += objectMoveSpeed * camera->GetCameraRight();
+			}
+		}
+	}
+}
+
+void ObjectTransformer::AddToSelectedList(DisplayObject* disObj)
+{
+	selectedList.push_back(disObj);
 }

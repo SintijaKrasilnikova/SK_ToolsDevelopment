@@ -172,22 +172,34 @@ int Game::MousePicking()
 		//if the object is valid
 		if (selectedID != -1)
 		{
-			//an object is selected so the camera has something to focus on
-			thisCamera->setCanFocus(true);
-			//send to camera the selected objects location
-			thisCamera->setFocusObjectsPos(m_displayList[selectedID].m_position);
+			if (m_InputCommands.multipleSelection == false)
+			{
+				//an object is selected so the camera has something to focus on
+				thisCamera->setCanFocus(true);
+				//send to camera the selected objects location
+				thisCamera->setFocusObjectsPos(m_displayList[selectedID].m_position);
 
-			objectTransformer->SetSelectedObject(&m_displayList[selectedID]);
-			objectTransformer->SetIsObjectSelected(true, selectedID);
+				objectTransformer->SetSelectedObject(&m_displayList[selectedID]);
+				objectTransformer->SetIsObjectSelected(true, selectedID);
 
-			m_currentSelectedDisplayObject = &m_displayList[selectedID];
+				m_currentSelectedDisplayObject = &m_displayList[selectedID];
+			}
+			else
+			{
+				//multipleSelectedList.push_back(m_displayList[selectedID]);
+				//multipleSelectedIDList.push_back(selectedID);
+				objectTransformer->AddToSelectedList(&m_displayList[selectedID]);
+				objectTransformer->SetMultipleSelected(true);
+			}
 		}
 		if (selectedID == -1)
 		{
+			//multipleSelectedList = nullptr;
 			//camera has nothing to focus on
 			thisCamera->setCanFocus(false);
 			objectTransformer->SetIsObjectSelected(false, -1);
 			m_currentSelectedDisplayObject = nullptr;
+
 		}
 	}
 	//if we got a hit.  return it.  
@@ -283,6 +295,11 @@ void Game::PasteObject()
 void Game::CopyObject()
 {
 	m_objectToCopy = m_currentSelectedDisplayObject;
+}
+
+void Game::MultiSelectionEnded()
+{
+	objectTransformer->SetMultipleSelected(false);
 }
 
 // Updates the world.

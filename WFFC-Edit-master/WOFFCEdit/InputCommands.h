@@ -42,4 +42,6 @@ struct InputCommands
 
 	bool copyCalled;
 	bool pasteCalled;
+
+	bool multipleSelection;
 };
