@@ -35,6 +35,7 @@ private:
     float objectMoveSpeed;
     float objectRotSpeed;
     float objectScaleSpeed;
+    bool objRemoved = false;
 
 
 };

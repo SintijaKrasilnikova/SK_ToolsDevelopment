@@ -22,6 +22,8 @@ void ObjectTransformer::Update(InputCommands* Input)
 void ObjectTransformer::SetMultipleSelected(bool areMultiSelected)
 {
 	areMultipleSelected = areMultiSelected;
+
+	//if multi selection was ended, clear the list
 	if(areMultiSelected == false)
 	{
 		selectedList.clear();
@@ -78,7 +80,7 @@ void ObjectTransformer::MoveSingle(InputCommands* Input)
 		{
 			selectedObject->m_orientation.z += objectRotSpeed;
 		}
-
+		//scale gets bigger/smaller in all directions
 		if (Input->scaleUp)
 		{
 			selectedObject->m_scale += DirectX::SimpleMath::Vector3(objectScaleSpeed, objectScaleSpeed, objectScaleSpeed);
@@ -96,12 +98,61 @@ void ObjectTransformer::MoveMultiple(InputCommands* Input)
 	{
 		for (unsigned int i = 0; i < selectedList.size(); i++)
 		{
+			
 			if (Input->moveObjectRight)
 			{
-				//auto id = selectedIDList[i];
-				//displayList[id].at(id).m_position += objectMoveSpeed * camera->GetCameraRight();
-				//displayList[id].data()->m_position += objectMoveSpeed * camera->GetCameraRight();
 				selectedList[i]->m_position += objectMoveSpeed * camera->GetCameraRight();
+			}
+			if (Input->moveObjectLeft)
+			{
+				selectedList[i]->m_position -= objectMoveSpeed * camera->GetCameraRight();
+			}
+
+			if (Input->moveObjectForward)
+			{
+				selectedList[i]->m_position -= objectMoveSpeed * camera->GetCameraUp();
+			}
+
+			if (Input->moveObjectBack)
+			{
+				selectedList[i]->m_position += objectMoveSpeed * camera->GetCameraUp();
+			}
+
+			if (Input->rotateObjectYawLeft)
+			{
+				selectedList[i]->m_orientation.x -= objectRotSpeed;
+			}
+			if (Input->rotateObjectYawRight)
+			{
+				selectedList[i]->m_orientation.x += objectRotSpeed;
+			}
+
+			if (Input->rotateObjectPitchLeft)
+			{
+				selectedList[i]->m_orientation.y -= objectRotSpeed;
+			}
+			if (Input->rotateObjectPitchRight)
+			{
+				selectedList[i]->m_orientation.y += objectRotSpeed;
+			}
+
+			if (Input->rotateObjectRollLeft)
+			{
+				selectedList[i]->m_orientation.z -= objectRotSpeed;
+			}
+			if (Input->rotateObjectRollRight)
+			{
+				selectedList[i]->m_orientation.z += objectRotSpeed;
+			}
+
+			//scale gets bigger/smaller in all directions
+			if (Input->scaleUp)
+			{
+				selectedList[i]->m_scale += DirectX::SimpleMath::Vector3(objectScaleSpeed, objectScaleSpeed, objectScaleSpeed);
+			}
+			if (Input->scaleDown)
+			{
+				selectedList[i]->m_scale -= DirectX::SimpleMath::Vector3(objectScaleSpeed, objectScaleSpeed, objectScaleSpeed);
 			}
 		}
 	}
@@ -109,5 +160,24 @@ void ObjectTransformer::MoveMultiple(InputCommands* Input)
 
 void ObjectTransformer::AddToSelectedList(DisplayObject* disObj)
 {
-	selectedList.push_back(disObj);
+	//check if the object is already in the list
+	//un-pick if it is
+	for (unsigned int i = 0; i < selectedList.size(); i++)
+	{
+		if(selectedList[i] == disObj)
+		{
+			//https://www.geeksforgeeks.org/how-to-remove-an-element-from-vector-in-cpp/
+
+			auto it = std::find(selectedList.begin(), selectedList.end(), selectedList[i]);
+			if (it != selectedList.end()) {
+				selectedList.erase(it);
+				objRemoved = true;
+			}
+		}
+	}
+	if (objRemoved == false)
+	{
+		selectedList.push_back(disObj);
+	}
+	objRemoved = false;
 }
