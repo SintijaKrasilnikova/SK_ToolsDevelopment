@@ -33,21 +33,42 @@ protected:
 
 	ToolMain* m_ToolSystem;
 	CWnd* pWnd;
+	float newPosXFloat;
+	float newPosYFloat;
+	float newPosZFloat;
+
+	float newRotXFloat;
+	float newRotYFloat;
+	float newRotZFloat;
+
+	float newScaleXFloat;
+	float newScaleYFloat;
+	float newScaleZFloat;
 
 
 	DECLARE_MESSAGE_MAP()
 public:
 	// Control variable for more efficient access of the listbox
-	CListBox m_listBox;
+	//CListBox m_listBox;
 	virtual BOOL OnInitDialog() override;
 	virtual void PostNcDestroy();
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedCancel();
 
 	//functions for changing the position
 	afx_msg void OnXPosChanged();
 	afx_msg void OnYPosChanged();
 	afx_msg void OnZPosChanged();
-	//afx_msg void OnLbnSelchangeList1();
+
+	//functions for changing the rotation
+	afx_msg void OnXRotChanged();
+	afx_msg void OnYRotChanged();
+	afx_msg void OnZRotChanged();
+
+	//functions for changing the scale
+	afx_msg void OnXScaleChanged();
+	afx_msg void OnYScaleChanged();
+	afx_msg void OnZScaleChanged();
 };
 
 INT_PTR CALLBACK ModifyObjectProc(HWND   hwndDlg, UINT   uMsg, WPARAM wParam, LPARAM lParam);

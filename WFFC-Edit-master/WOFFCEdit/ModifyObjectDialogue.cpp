@@ -10,7 +10,18 @@ IMPLEMENT_DYNAMIC(ModifyObjectDialogue, CDialogEx)
 BEGIN_MESSAGE_MAP(ModifyObjectDialogue, CDialogEx)
 	ON_COMMAND(IDOK, &ModifyObjectDialogue::End)					//ok button
 	ON_BN_CLICKED(IDOK, &ModifyObjectDialogue::OnBnClickedOk)
-	ON_EN_CHANGE(IDC_EDIT1, &ModifyObjectDialogue::OnChangeXPos)
+	ON_BN_CLICKED(IDCANCEL, &ModifyObjectDialogue::OnBnClickedCancel)
+	ON_EN_CHANGE(IDC_EDIT1, &ModifyObjectDialogue::OnXPosChanged)
+	ON_EN_CHANGE(IDC_EDIT2, &ModifyObjectDialogue::OnYPosChanged)
+	ON_EN_CHANGE(IDC_EDIT3, &ModifyObjectDialogue::OnZPosChanged)
+
+	ON_EN_CHANGE(IDC_EDIT4, &ModifyObjectDialogue::OnXRotChanged)
+	ON_EN_CHANGE(IDC_EDIT5, &ModifyObjectDialogue::OnYRotChanged)
+	ON_EN_CHANGE(IDC_EDIT6, &ModifyObjectDialogue::OnZRotChanged)
+
+	ON_EN_CHANGE(IDC_EDIT7, &ModifyObjectDialogue::OnXScaleChanged)
+	ON_EN_CHANGE(IDC_EDIT8, &ModifyObjectDialogue::OnYScaleChanged)
+	ON_EN_CHANGE(IDC_EDIT9, &ModifyObjectDialogue::OnZScaleChanged)
 	//ON_LBN_SELCHANGE(IDC_LIST1, &ModifyObjectDialogue::Select)	//listbox
 END_MESSAGE_MAP()
 
@@ -47,30 +58,90 @@ ModifyObjectDialogue::~ModifyObjectDialogue()
 void ModifyObjectDialogue::SetFieldInfo(std::vector<DisplayObject>* disList, ToolMain* tool)
 {
 	m_ToolSystem = tool;
-	m_currentSelectionID = m_ToolSystem->m_selectedObject;
-	m_displayList = disList;
-
-	m_ToolSystem->IsSelectionAvailable(false);
-	if (m_currentSelectionID > -1)
+	if (tool != nullptr)
 	{
-		pWnd = GetDlgItem(IDC_EDIT1);
-		pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_position.x).c_str());
+		m_currentSelectionID = m_ToolSystem->m_selectedObject;
+		m_displayList = disList;
+
+		m_ToolSystem->IsSelectionAvailable(false);
+		if (m_currentSelectionID > -1)
+		{
+			//set x pos
+			pWnd = GetDlgItem(IDC_EDIT1);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_position.x).c_str());
+			//set y pos
+			pWnd = GetDlgItem(IDC_EDIT2);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_position.y).c_str());
+			//set z pos
+			pWnd = GetDlgItem(IDC_EDIT3);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_position.z).c_str());
+
+			//set x rot
+			pWnd = GetDlgItem(IDC_EDIT4);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_orientation.x).c_str());
+			//set y rot
+			pWnd = GetDlgItem(IDC_EDIT5);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_orientation.y).c_str());
+			//set z rot
+			pWnd = GetDlgItem(IDC_EDIT6);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_orientation.z).c_str());
+
+			//set x scale
+			pWnd = GetDlgItem(IDC_EDIT7);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_scale.x).c_str());
+			//set y scale
+			pWnd = GetDlgItem(IDC_EDIT8);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_scale.y).c_str());
+			//set z scale
+			pWnd = GetDlgItem(IDC_EDIT9);
+			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_scale.z).c_str());
+
+		}
 	}
 }
 
 void ModifyObjectDialogue::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT1, newPosXFloat);
+	DDX_Text(pDX, IDC_EDIT2, newPosYFloat);
+	DDX_Text(pDX, IDC_EDIT3, newPosZFloat);
+
+	DDX_Text(pDX, IDC_EDIT4, newRotXFloat);
+	DDX_Text(pDX, IDC_EDIT5, newRotYFloat);
+	DDX_Text(pDX, IDC_EDIT6, newRotZFloat);
+
+	DDX_Text(pDX, IDC_EDIT7, newScaleXFloat);
+	DDX_Text(pDX, IDC_EDIT8, newScaleYFloat);
+	DDX_Text(pDX, IDC_EDIT9, newScaleZFloat);
 }
 
 void ModifyObjectDialogue::End()
 {
+	m_ToolSystem->IsSelectionAvailable(true);
+	m_ToolSystem = nullptr;
+	m_currentSelectionID -= 1;
+	m_displayList = nullptr;
+
 	DestroyWindow();
+	return;
 }
 
-void ModifyObjectDialogue::OnChangeXPos()
-{
-}
+//void ModifyObjectDialogue::OnChangeXPos()
+//{
+//	CString newPosX;
+//	//float newPosXFloat;
+//
+//	pWnd = GetDlgItem(IDC_EDIT1);
+//	pWnd->GetWindowText(newPosX);
+//
+//	//change to float
+//	swscanf_s(newPosX, L"%f", &newPosXFloat);
+//	//Set the new position.
+//	m_displayList->at(m_currentSelectionID).m_position.x = newPosXFloat;
+//
+//	//m_ToolSystem->IsSelectionAvailable(true);
+//}
 
 BOOL ModifyObjectDialogue::OnInitDialog()
 {
@@ -79,15 +150,36 @@ BOOL ModifyObjectDialogue::OnInitDialog()
 
 void ModifyObjectDialogue::PostNcDestroy()
 {
-	m_ToolSystem->IsSelectionAvailable(true);
+	//m_ToolSystem->IsSelectionAvailable(true);
 	CDialogEx::PostNcDestroy();
 }
 
 void ModifyObjectDialogue::OnBnClickedOk()
 {
-	CString newPosX;
-	float newPosXFloat;
+	//CString newPosX;
+	//float newPosXFloat;
 
+	//pWnd = GetDlgItem(IDC_EDIT1);
+	//pWnd->GetWindowText(newPosX);
+
+	////change to float
+	//swscanf_s(newPosX, L"%f", &newPosXFloat);
+	////Set the new position.
+	//m_displayList->at(m_currentSelectionID).m_position.x = newPosXFloat;
+
+	m_ToolSystem->IsSelectionAvailable(true);
+	CDialogEx::OnOK();
+}
+
+void ModifyObjectDialogue::OnBnClickedCancel()
+{
+	m_ToolSystem->IsSelectionAvailable(true);
+	CDialogEx::OnCancel();
+}
+
+void ModifyObjectDialogue::OnXPosChanged()
+{
+	CString newPosX;
 	pWnd = GetDlgItem(IDC_EDIT1);
 	pWnd->GetWindowText(newPosX);
 
@@ -95,8 +187,101 @@ void ModifyObjectDialogue::OnBnClickedOk()
 	swscanf_s(newPosX, L"%f", &newPosXFloat);
 	//Set the new position.
 	m_displayList->at(m_currentSelectionID).m_position.x = newPosXFloat;
+}
 
-	m_ToolSystem->IsSelectionAvailable(true);
-	CDialogEx::OnOK();
+void ModifyObjectDialogue::OnYPosChanged()
+{
+	CString newPosY;
+	pWnd = GetDlgItem(IDC_EDIT2);
+	pWnd->GetWindowText(newPosY);
+
+	//change to float
+	swscanf_s(newPosY, L"%f", &newPosYFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_position.y = newPosYFloat;
+}
+
+void ModifyObjectDialogue::OnZPosChanged()
+{
+	CString newPosZ;
+	pWnd = GetDlgItem(IDC_EDIT3);
+	pWnd->GetWindowText(newPosZ);
+
+	//change to float
+	swscanf_s(newPosZ, L"%f", &newPosZFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_position.z = newPosZFloat;
+}
+
+void ModifyObjectDialogue::OnXRotChanged()
+{
+	CString newPosX;
+	pWnd = GetDlgItem(IDC_EDIT4);
+	pWnd->GetWindowText(newPosX);
+
+	//change to float
+	swscanf_s(newPosX, L"%f", &newRotXFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_orientation.x = newRotXFloat;
+}
+
+void ModifyObjectDialogue::OnYRotChanged()
+{
+	CString newPosY;
+	pWnd = GetDlgItem(IDC_EDIT5);
+	pWnd->GetWindowText(newPosY);
+
+	//change to float
+	swscanf_s(newPosY, L"%f", &newRotYFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_orientation.y = newRotYFloat;
+}
+
+void ModifyObjectDialogue::OnZRotChanged()
+{
+	CString newPosZ;
+	pWnd = GetDlgItem(IDC_EDIT6);
+	pWnd->GetWindowText(newPosZ);
+
+	//change to float
+	swscanf_s(newPosZ, L"%f", &newRotZFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_orientation.z = newRotZFloat;
+}
+
+void ModifyObjectDialogue::OnXScaleChanged()
+{
+	CString newPosX;
+	pWnd = GetDlgItem(IDC_EDIT7);
+	pWnd->GetWindowText(newPosX);
+
+	//change to float
+	swscanf_s(newPosX, L"%f", &newScaleXFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_scale.x = newScaleXFloat;
+}
+
+void ModifyObjectDialogue::OnYScaleChanged()
+{
+	CString newPosY;
+	pWnd = GetDlgItem(IDC_EDIT8);
+	pWnd->GetWindowText(newPosY);
+
+	//change to float
+	swscanf_s(newPosY, L"%f", &newScaleYFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_scale.y = newScaleYFloat;
+}
+
+void ModifyObjectDialogue::OnZScaleChanged()
+{
+	CString newPosZ;
+	pWnd = GetDlgItem(IDC_EDIT9);
+	pWnd->GetWindowText(newPosZ);
+
+	//change to float
+	swscanf_s(newPosZ, L"%f", &newScaleZFloat);
+	//Set the new position.
+	m_displayList->at(m_currentSelectionID).m_scale.z = newScaleZFloat;
 }
 
