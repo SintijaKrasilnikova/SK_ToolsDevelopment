@@ -188,6 +188,7 @@ int Game::MousePicking()
 			{
 				//multipleSelectedList.push_back(m_displayList[selectedID]);
 				//multipleSelectedIDList.push_back(selectedID);
+				m_currentSelectedDisplayObject = &m_displayList[selectedID];
 				objectTransformer->AddToSelectedList(&m_displayList[selectedID]);
 				objectTransformer->SetMultipleSelected(true);
 			}
@@ -300,6 +301,32 @@ void Game::CopyObject()
 void Game::MultiSelectionEnded()
 {
 	objectTransformer->SetMultipleSelected(false);
+}
+
+void Game::CreateNewTextureShader(std::string texturePath)
+{
+	if (m_currentSelectedDisplayObject != nullptr)
+	{
+		//taken from BuildDisplayList function
+		auto device = m_deviceResources->GetD3DDevice();
+		//Load Texture
+		std::wstring texturewstr = StringToWCHART(texturePath);								//convect string to Wchar
+		HRESULT rs;
+		rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &m_currentSelectedDisplayObject->m_texture_diffuse);
+		if (rs)
+		{
+			CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &m_currentSelectedDisplayObject->m_texture_diffuse);	//load tex into Shader resource
+		}
+
+		m_currentSelectedDisplayObject->m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+			{
+				auto lights = dynamic_cast<BasicEffect*>(effect);
+				if (lights)
+				{
+					lights->SetTexture(m_currentSelectedDisplayObject->m_texture_diffuse);
+				}
+			});
+	}
 }
 
 // Updates the world.

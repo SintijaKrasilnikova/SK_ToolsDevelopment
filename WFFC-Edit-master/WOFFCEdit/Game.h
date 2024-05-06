@@ -61,6 +61,7 @@ public:
 	void CopyObject();
 
 	void MultiSelectionEnded();
+	void CreateNewTextureShader(std::string texturePath);
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();

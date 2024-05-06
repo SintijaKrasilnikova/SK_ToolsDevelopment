@@ -11,6 +11,7 @@ BEGIN_MESSAGE_MAP(ModifyObjectDialogue, CDialogEx)
 	ON_COMMAND(IDOK, &ModifyObjectDialogue::End)					//ok button
 	ON_BN_CLICKED(IDOK, &ModifyObjectDialogue::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &ModifyObjectDialogue::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_BUTTON1, &ModifyObjectDialogue::OnSelectTexture)
 	ON_EN_CHANGE(IDC_EDIT1, &ModifyObjectDialogue::OnXPosChanged)
 	ON_EN_CHANGE(IDC_EDIT2, &ModifyObjectDialogue::OnYPosChanged)
 	ON_EN_CHANGE(IDC_EDIT3, &ModifyObjectDialogue::OnZPosChanged)
@@ -96,8 +97,24 @@ void ModifyObjectDialogue::SetFieldInfo(std::vector<DisplayObject>* disList, Too
 			pWnd = GetDlgItem(IDC_EDIT9);
 			pWnd->SetWindowText(std::to_wstring(m_displayList->at(m_currentSelectionID).m_scale.z).c_str());
 
+			pWnd = GetDlgItem(IDC_EDIT11);
+			std::string texPathString = m_displayList->at(m_currentSelectionID).m_texturePath;
+			std::wstring wstringTexPath;
+			StringToWString(wstringTexPath, texPathString);
+
+			//https://stackoverflow.com/questions/1200188/how-to-convert-stdstring-to-lpcstr
+			LPCWSTR pcwstr = wstringTexPath.c_str();
+			pWnd->SetWindowText(pcwstr);
+
 		}
 	}
+}
+int ModifyObjectDialogue::StringToWString(std::wstring& ws, const std::string& s)
+{
+	//https://stackoverflow.com/questions/2573834/c-convert-string-or-char-to-wstring-or-wchar-t
+	std::wstring wsTmp(s.begin(), s.end());
+	ws = wsTmp;
+	return 0;
 }
 
 void ModifyObjectDialogue::DoDataExchange(CDataExchange* pDX)
@@ -114,6 +131,7 @@ void ModifyObjectDialogue::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT7, newScaleXFloat);
 	DDX_Text(pDX, IDC_EDIT8, newScaleYFloat);
 	DDX_Text(pDX, IDC_EDIT9, newScaleZFloat);
+	//DDX_Text(pDX, IDC_EDIT11, texPathWindow);
 }
 
 void ModifyObjectDialogue::End()
@@ -125,6 +143,35 @@ void ModifyObjectDialogue::End()
 
 	DestroyWindow();
 	return;
+}
+
+void ModifyObjectDialogue::OnSelectTexture()
+{
+	//https://www.programmerall.com/article/50391274688/
+
+	CString strFile = _T("");
+	CFileDialog    dlgFile(TRUE, NULL, NULL, OFN_HIDEREADONLY, _T("Textures (*.dds)|*.dds|All Files (*.*)|*.*||"), NULL);
+	
+	if (dlgFile.DoModal())
+	{
+	    strFile = dlgFile.GetPathName();
+	}
+
+	//set the texture path for the new selected
+	CT2A changedCString(strFile);
+	std::string textureString(changedCString);
+
+
+	//https://cplusplus.com/reference/string/string/find/
+	int found = textureString.find("database");
+	if (found != std::string::npos)
+	{
+		strcpy(changedCString, &textureString[found]);
+		std::string textureString(changedCString);
+		m_displayList->at(m_currentSelectionID).m_texturePath = textureString;
+		m_ToolSystem->TellGameNewTextureChosen(textureString);
+	}
+		
 }
 
 //void ModifyObjectDialogue::OnChangeXPos()

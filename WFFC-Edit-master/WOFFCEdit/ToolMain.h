@@ -29,6 +29,7 @@ public: //methods
 	std::vector<DisplayObject>* GetDisplayList();
 	void IsSelectionAvailable(bool canSelect);
 	void SetCopyPasteCalled(bool isCopyCalled, bool isPasteCalled);
+	void TellGameNewTextureChosen(std::string texturePath);
 
 public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk

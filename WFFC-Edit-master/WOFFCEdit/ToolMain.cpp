@@ -541,3 +541,8 @@ void ToolMain::SetCopyPasteCalled(bool isCopyCalled, bool isPasteCalled)
 	m_toolInputCommands.pasteCalled = isPasteCalled;
 	m_toolInputCommands.copyCalled = isCopyCalled;
 }
+
+void ToolMain::TellGameNewTextureChosen(std::string texturePath)
+{
+	m_d3dRenderer.CreateNewTextureShader(texturePath);
+}
