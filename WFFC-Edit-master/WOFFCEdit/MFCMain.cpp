@@ -107,17 +107,9 @@ void MFCMain::MenuEditSelect()
 void MFCMain::MenuEditObject()
 {
 
-	//m_ToolEditDialogue.Create(IDD_DIALOG2);	//Start up modeless
-	//m_ToolEditDialogue.ShowWindow(SW_SHOW);	//show modeless
-	//m_ToolModifyObjectDialogue.SetObjectData(&m_ToolSystem.m_sceneGraph, &m_ToolSystem.m_selectedObject);
-
 	m_ToolEditDialogue.Create(IDD_DIALOG2);	//Start up modeless
-	//m_ToolSystem.UpdateScenegraphFromGame();
-	//m_ToolEditDialogue.SetToolsAndInfo(&m_ToolSystem);
 	m_ToolEditDialogue.SetFieldInfo(m_ToolSystem.GetDisplayList(), &m_ToolSystem);
 	m_ToolEditDialogue.ShowWindow(SW_SHOW);	//show modeless
-	
-
 }
 
 void MFCMain::ToolBarButton1()

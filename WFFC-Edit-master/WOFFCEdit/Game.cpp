@@ -193,7 +193,6 @@ int Game::MousePicking()
 		}
 		if (selectedID == -1)
 		{
-			//multipleSelectedList = nullptr;
 			//camera has nothing to focus on
 			m_currentSelectedDisplayObject = false;
 			thisCamera->setCanFocus(false);

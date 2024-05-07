@@ -177,22 +177,6 @@ void ModifyObjectDialogue::OnSelectTexture()
 		
 }
 
-//void ModifyObjectDialogue::OnChangeXPos()
-//{
-//	CString newPosX;
-//	//float newPosXFloat;
-//
-//	pWnd = GetDlgItem(IDC_EDIT1);
-//	pWnd->GetWindowText(newPosX);
-//
-//	//change to float
-//	swscanf_s(newPosX, L"%f", &newPosXFloat);
-//	//Set the new position.
-//	m_displayList->at(m_currentSelectionID).m_position.x = newPosXFloat;
-//
-//	//m_ToolSystem->IsSelectionAvailable(true);
-//}
-
 BOOL ModifyObjectDialogue::OnInitDialog()
 {
 	return CDialogEx::OnInitDialog();
