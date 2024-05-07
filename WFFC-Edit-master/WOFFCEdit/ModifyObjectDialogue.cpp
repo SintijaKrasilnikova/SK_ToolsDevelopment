@@ -147,29 +147,32 @@ void ModifyObjectDialogue::End()
 
 void ModifyObjectDialogue::OnSelectTexture()
 {
-	//https://www.programmerall.com/article/50391274688/
-
-	CString strFile = _T("");
-	CFileDialog    dlgFile(TRUE, NULL, NULL, OFN_HIDEREADONLY, _T("Textures (*.dds)|*.dds|All Files (*.*)|*.*||"), NULL);
-	
-	if (dlgFile.DoModal())
+	if (m_currentSelectionID != -1)
 	{
-	    strFile = dlgFile.GetPathName();
-	}
+		//https://www.programmerall.com/article/50391274688/
 
-	//set the texture path for the new selected
-	CT2A changedCString(strFile);
-	std::string textureString(changedCString);
+		CString strFile = _T("");
+		CFileDialog    dlgFile(TRUE, NULL, NULL, OFN_HIDEREADONLY, _T("Textures (*.dds)|*.dds|All Files (*.*)|*.*||"), NULL);
 
+		if (dlgFile.DoModal())
+		{
+			strFile = dlgFile.GetPathName();
+		}
 
-	//https://cplusplus.com/reference/string/string/find/
-	int found = textureString.find("database");
-	if (found != std::string::npos)
-	{
-		strcpy(changedCString, &textureString[found]);
+		//set the texture path for the new selected
+		CT2A changedCString(strFile);
 		std::string textureString(changedCString);
-		m_displayList->at(m_currentSelectionID).m_texturePath = textureString;
-		m_ToolSystem->TellGameNewTextureChosen(textureString);
+
+
+		//https://cplusplus.com/reference/string/string/find/
+		int found = textureString.find("database");
+		if (found != std::string::npos)
+		{
+			strcpy(changedCString, &textureString[found]);
+			std::string textureString(changedCString);
+			m_displayList->at(m_currentSelectionID).m_texturePath = textureString;
+			m_ToolSystem->TellGameNewTextureChosen(textureString);
+		}
 	}
 		
 }
@@ -226,109 +229,136 @@ void ModifyObjectDialogue::OnBnClickedCancel()
 
 void ModifyObjectDialogue::OnXPosChanged()
 {
-	CString newPosX;
-	pWnd = GetDlgItem(IDC_EDIT1);
-	pWnd->GetWindowText(newPosX);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosX;
+		pWnd = GetDlgItem(IDC_EDIT1);
+		pWnd->GetWindowText(newPosX);
 
-	//change to float
-	swscanf_s(newPosX, L"%f", &newPosXFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_position.x = newPosXFloat;
+		//change to float
+		swscanf_s(newPosX, L"%f", &newPosXFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_position.x = newPosXFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnYPosChanged()
 {
-	CString newPosY;
-	pWnd = GetDlgItem(IDC_EDIT2);
-	pWnd->GetWindowText(newPosY);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosY;
+		pWnd = GetDlgItem(IDC_EDIT2);
+		pWnd->GetWindowText(newPosY);
 
-	//change to float
-	swscanf_s(newPosY, L"%f", &newPosYFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_position.y = newPosYFloat;
+		//change to float
+		swscanf_s(newPosY, L"%f", &newPosYFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_position.y = newPosYFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnZPosChanged()
 {
-	CString newPosZ;
-	pWnd = GetDlgItem(IDC_EDIT3);
-	pWnd->GetWindowText(newPosZ);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosZ;
+		pWnd = GetDlgItem(IDC_EDIT3);
+		pWnd->GetWindowText(newPosZ);
 
-	//change to float
-	swscanf_s(newPosZ, L"%f", &newPosZFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_position.z = newPosZFloat;
+		//change to float
+		swscanf_s(newPosZ, L"%f", &newPosZFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_position.z = newPosZFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnXRotChanged()
 {
-	CString newPosX;
-	pWnd = GetDlgItem(IDC_EDIT4);
-	pWnd->GetWindowText(newPosX);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosX;
+		pWnd = GetDlgItem(IDC_EDIT4);
+		pWnd->GetWindowText(newPosX);
 
-	//change to float
-	swscanf_s(newPosX, L"%f", &newRotXFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_orientation.x = newRotXFloat;
+		//change to float
+		swscanf_s(newPosX, L"%f", &newRotXFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_orientation.x = newRotXFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnYRotChanged()
 {
-	CString newPosY;
-	pWnd = GetDlgItem(IDC_EDIT5);
-	pWnd->GetWindowText(newPosY);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosY;
+		pWnd = GetDlgItem(IDC_EDIT5);
+		pWnd->GetWindowText(newPosY);
 
-	//change to float
-	swscanf_s(newPosY, L"%f", &newRotYFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_orientation.y = newRotYFloat;
+		//change to float
+		swscanf_s(newPosY, L"%f", &newRotYFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_orientation.y = newRotYFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnZRotChanged()
 {
-	CString newPosZ;
-	pWnd = GetDlgItem(IDC_EDIT6);
-	pWnd->GetWindowText(newPosZ);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosZ;
+		pWnd = GetDlgItem(IDC_EDIT6);
+		pWnd->GetWindowText(newPosZ);
 
-	//change to float
-	swscanf_s(newPosZ, L"%f", &newRotZFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_orientation.z = newRotZFloat;
+		//change to float
+		swscanf_s(newPosZ, L"%f", &newRotZFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_orientation.z = newRotZFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnXScaleChanged()
 {
-	CString newPosX;
-	pWnd = GetDlgItem(IDC_EDIT7);
-	pWnd->GetWindowText(newPosX);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosX;
+		pWnd = GetDlgItem(IDC_EDIT7);
+		pWnd->GetWindowText(newPosX);
 
-	//change to float
-	swscanf_s(newPosX, L"%f", &newScaleXFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_scale.x = newScaleXFloat;
+		//change to float
+		swscanf_s(newPosX, L"%f", &newScaleXFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_scale.x = newScaleXFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnYScaleChanged()
 {
-	CString newPosY;
-	pWnd = GetDlgItem(IDC_EDIT8);
-	pWnd->GetWindowText(newPosY);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosY;
+		pWnd = GetDlgItem(IDC_EDIT8);
+		pWnd->GetWindowText(newPosY);
 
-	//change to float
-	swscanf_s(newPosY, L"%f", &newScaleYFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_scale.y = newScaleYFloat;
+		//change to float
+		swscanf_s(newPosY, L"%f", &newScaleYFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_scale.y = newScaleYFloat;
+	}
 }
 
 void ModifyObjectDialogue::OnZScaleChanged()
 {
-	CString newPosZ;
-	pWnd = GetDlgItem(IDC_EDIT9);
-	pWnd->GetWindowText(newPosZ);
+	if (m_currentSelectionID != -1)
+	{
+		CString newPosZ;
+		pWnd = GetDlgItem(IDC_EDIT9);
+		pWnd->GetWindowText(newPosZ);
 
-	//change to float
-	swscanf_s(newPosZ, L"%f", &newScaleZFloat);
-	//Set the new position.
-	m_displayList->at(m_currentSelectionID).m_scale.z = newScaleZFloat;
+		//change to float
+		swscanf_s(newPosZ, L"%f", &newScaleZFloat);
+		//Set the new position.
+		m_displayList->at(m_currentSelectionID).m_scale.z = newScaleZFloat;
+	}
 }
 

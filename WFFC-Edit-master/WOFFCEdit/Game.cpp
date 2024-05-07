@@ -186,8 +186,6 @@ int Game::MousePicking()
 			}
 			else
 			{
-				//multipleSelectedList.push_back(m_displayList[selectedID]);
-				//multipleSelectedIDList.push_back(selectedID);
 				m_currentSelectedDisplayObject = &m_displayList[selectedID];
 				objectTransformer->AddToSelectedList(&m_displayList[selectedID]);
 				objectTransformer->SetMultipleSelected(true);
@@ -197,6 +195,7 @@ int Game::MousePicking()
 		{
 			//multipleSelectedList = nullptr;
 			//camera has nothing to focus on
+			m_currentSelectedDisplayObject = false;
 			thisCamera->setCanFocus(false);
 			objectTransformer->SetIsObjectSelected(false, -1);
 			m_currentSelectedDisplayObject = nullptr;
@@ -428,7 +427,7 @@ void Game::Render()
 
 		XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
-		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, false);	//last variable in draw,  make TRUE for wireframe
+		m_displayList[i].m_model->Draw(context, *m_states, local, m_view, m_projection, m_displayList[i].m_wireframe);	//last variable in draw,  make TRUE for wireframe
 
 		m_deviceResources->PIXEndEvent();
 	}

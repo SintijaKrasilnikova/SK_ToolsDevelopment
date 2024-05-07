@@ -26,6 +26,10 @@ void ObjectTransformer::SetMultipleSelected(bool areMultiSelected)
 	//if multi selection was ended, clear the list
 	if(areMultiSelected == false)
 	{
+		for (unsigned int i = 0; i < selectedList.size(); i++)
+		{
+			selectedList[i]->m_wireframe = false;
+		}
 		selectedList.clear();
 	}
 }
@@ -170,6 +174,7 @@ void ObjectTransformer::AddToSelectedList(DisplayObject* disObj)
 
 			auto it = std::find(selectedList.begin(), selectedList.end(), selectedList[i]);
 			if (it != selectedList.end()) {
+				disObj->m_wireframe = false;
 				selectedList.erase(it);
 				objRemoved = true;
 			}
@@ -177,6 +182,7 @@ void ObjectTransformer::AddToSelectedList(DisplayObject* disObj)
 	}
 	if (objRemoved == false)
 	{
+		disObj->m_wireframe = true;
 		selectedList.push_back(disObj);
 	}
 	objRemoved = false;
